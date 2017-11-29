@@ -34,9 +34,6 @@ exports.transform = function transform(options) {
       return rule.transformer.transform(options);
     }
   }
-  if (options.filename.indexOf('ts') > 0) {
-    throw new Error('Hello' + options.filename);
-  }
   return origin.transform(options);
 }
 

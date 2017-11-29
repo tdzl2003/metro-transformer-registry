@@ -6,25 +6,15 @@ const path = require('path');
 
 function decodeSourceMap(map, fn, content) {
   const smc = new SourceMap.SourceMapConsumer(map);
-  const outMap = new SourceMap.SourceMapGenerator();
-  outMap.setSourceContent(fn, content);
-
-  smc.eachMapping(({
-    source,
-    generatedLine,
-    generatedColumn,
-    originalLine,
-    originalColumn,
-    name,
-  }) => {
-    outMap.addMapping({
-      generated: { line: generatedLine, column: generatedColumn },
-      original: { line: originalLine, column: originalColumn },
-      source: fn,
-      name: name,
-    })
-  })
-  return outMap.toJSON();
+  const ret = [];
+  smc.eachMapping(m => {
+    if (m.name) {
+      ret.push([m.generatedLine, m.generatedColumn, m.originalLine, m.originalColumn, m.name]);
+    } else {
+      ret.push([m.generatedLine, m.generatedColumn, m.originalLine, m.originalColumn]);
+    }
+  });
+  return ret;
 }
 
 exports.transform = function(options) {
