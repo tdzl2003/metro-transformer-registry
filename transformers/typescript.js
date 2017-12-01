@@ -17,6 +17,9 @@ function decodeSourceMap(map, fn, content) {
   return ret;
 }
 
+// Dirty: Fix slashes issue on windows.
+ts.createCompilerHost({}).getCurrentDirectory();
+
 exports.transform = function(options) {
   const configFn = ts.findConfigFile(options.filename, fs.existsSync);
   const config = configFn && ts.readConfigFile(configFn, fn => fs.readFileSync(fn, 'utf-8')).config;
@@ -29,7 +32,7 @@ exports.transform = function(options) {
   return {
     code: out.outputText,
     filename: options.filename,
-    map: decodeSourceMap(out.sourceMapText, options.filename, options.src),
+    map: out.sourceMapText && decodeSourceMap(out.sourceMapText, options.filename, options.src) || undefined,
   };
 };
 
