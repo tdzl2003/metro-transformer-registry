@@ -18,7 +18,7 @@ function decodeSourceMap(map, fn, content) {
 }
 
 // Dirty: Fix slashes issue on windows.
-ts.createCompilerHost({}).getCurrentDirectory();
+ts.directorySeparator = path.sep;
 
 exports.transform = function(options) {
   const configFn = ts.findConfigFile(options.filename, fs.existsSync);
